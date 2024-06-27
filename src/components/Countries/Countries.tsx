@@ -27,7 +27,7 @@ function Countries() {
 
   return (
     <div>
-      <div className="container flex flex-col items-center p-6 mx-auto gap-y-4">
+      <div className="container flex flex-col items-center p-6 mx-auto gap-y-4 min-h-80">
         <h3 className="text-2xl font-semibold">Favorite Countries</h3>
         <CardList isSelected={true} />
       </div>
