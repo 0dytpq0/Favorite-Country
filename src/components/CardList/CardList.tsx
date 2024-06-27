@@ -1,36 +1,28 @@
+import useCountryStore from "../../zustand/store";
 import Card from "../Card/Card";
-type CountriesInfoType = {
-  name: {
-    common: string;
-  };
-  flags: { png: string };
-  capital: string;
-  population: number;
-};
 
 interface CardListProps {
-  onClickFn: (countries: CountriesInfoType[], name: string, isSelected: boolean) => void;
-  countries: CountriesInfoType[];
   isSelected: boolean;
 }
 
-function CardList({ onClickFn: handleClickCard, countries, isSelected }: CardListProps) {
-  return (
-    <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
-      {countries?.map((country) => {
-        return (
-          <Card
-            onClickFn={handleClickCard}
-            isSelected={isSelected}
-            countries={countries}
-            flag={country?.flags.png}
-            name={country?.name.common}
-            capital={country?.capital}
-          />
-        );
-      })}
-    </div>
-  );
+function CardList({ isSelected }: CardListProps) {
+  const { totalCountries, selectedCountries, handleClickCard } = useCountryStore();
+  const countries = isSelected ? selectedCountries : totalCountries;
+  const paintCards = (isSelected: boolean) => {
+    return countries?.map((country) => {
+      return (
+        <Card
+          onClickFn={() => handleClickCard(countries, country?.name.common, isSelected)}
+          isSelected={isSelected}
+          flag={country?.flags.png}
+          name={country?.name.common}
+          capital={country?.capital}
+        />
+      );
+    });
+  };
+
+  return <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">{paintCards(isSelected)}</div>;
 }
 
 export default CardList;

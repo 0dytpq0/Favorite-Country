@@ -1,8 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useEffect } from "react";
 import api from "../../api/api";
+import useCountryStore from "../../zustand/store";
 import CardList from "../CardList";
 
-type CountriesInfoType = {
+type ResponseDataType = {
   name: {
     common: string;
   };
@@ -12,51 +15,30 @@ type CountriesInfoType = {
 };
 
 function Countries() {
-  const [countriesInfo, setCountriesInfo] = useState<CountriesInfoType[]>([]);
-  const [selectedCountries, setSelectedCountries] = useState<CountriesInfoType[]>([]);
+  const { setTotalCountries } = useCountryStore();
+
+  const { data: countries = [] } = useQuery<ResponseDataType[], AxiosError>({
+    queryKey: ["countries"],
+    queryFn: () => api.country.getCountriesInfo(),
+    staleTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnReconnect: true,
+  });
 
   useEffect(() => {
-    const getCountriesInfo = async () => {
-      const countries = await api.country.getCountriesInfo();
-      setCountriesInfo(countries);
-    };
-
-    getCountriesInfo();
-  }, []);
-
-  const handleClickCard: (countries: CountriesInfoType[], name: string, isSelected: boolean) => void = useCallback(
-    (countries, name, isSelected) => {
-      const updatedSelectedCountries: CountriesInfoType[] = [];
-      const updatedCountriesInfo: CountriesInfoType[] = [];
-
-      countries.forEach((country) => {
-        if (country.name.common === name) {
-          updatedSelectedCountries.push(country);
-        } else {
-          updatedCountriesInfo.push(country);
-        }
-      });
-
-      if (isSelected) {
-        setCountriesInfo((prevCountries) => prevCountries.concat(updatedSelectedCountries).sort((a, b) => b.population - a.population));
-        setSelectedCountries(updatedCountriesInfo);
-      } else {
-        setSelectedCountries((prevSelected) => prevSelected.concat(updatedSelectedCountries));
-        setCountriesInfo(updatedCountriesInfo);
-      }
-    },
-    []
-  );
+    setTotalCountries(countries);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countries]);
 
   return (
     <div>
       <div className="container flex flex-col items-center p-6 mx-auto gap-y-4">
         <h3 className="text-2xl font-semibold">Favorite Countries</h3>
-        <CardList onClickFn={handleClickCard} countries={selectedCountries} isSelected={true} />
+        <CardList isSelected={true} />
       </div>
       <div className="container flex flex-col items-center p-6 mx-auto gap-y-4">
         <h3 className="text-4xl font-semibold">Countries</h3>
-        <CardList onClickFn={handleClickCard} countries={countriesInfo} isSelected={false} />
+        <CardList isSelected={false} />
       </div>
     </div>
   );
