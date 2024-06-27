@@ -4,7 +4,7 @@ type CardProps = {
   name: string;
   capital: string;
   flag: string;
-  onClickFn: () => void;
+  onClickFn: React.MouseEventHandler<HTMLDivElement>;
 } & CardVariantType;
 
 const cardVariant = cva(

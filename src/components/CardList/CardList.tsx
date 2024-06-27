@@ -9,7 +9,6 @@ interface CardListProps {
 function CardList({ isSelected }: CardListProps) {
   const { totalCountries, selectedCountries, handleClickCard } =
     useCountryStore();
-
   const { size } = useResize(1000);
 
   const countries = isSelected ? selectedCountries : totalCountries;

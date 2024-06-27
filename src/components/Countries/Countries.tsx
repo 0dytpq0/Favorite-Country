@@ -1,21 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
+import { ResponseDataType } from "../../Types";
 import api from "../../api/api";
 import useCountryStore from "../../zustand/store";
 import CardList from "../CardList";
 
-type ResponseDataType = {
-  name: {
-    common: string;
-  };
-  flags: { png: string };
-  capital: string;
-  population: number;
-};
-
 function Countries() {
   const { setTotalCountries } = useCountryStore();
+
   const { data: countries = [], isSuccess = false } = useQuery<
     ResponseDataType[],
     AxiosError

@@ -1,23 +1,15 @@
 import { create } from "zustand";
-
-type CountriesType = {
-  name: {
-    common: string;
-  };
-  flags: { png: string };
-  capital: string;
-  population: number;
-};
+import { ResponseDataType } from "../Types";
 
 type CountryState = {
   windowSize: string;
-  totalCountries: CountriesType[];
-  selectedCountries: CountriesType[];
+  totalCountries: ResponseDataType[];
+  selectedCountries: ResponseDataType[];
   setWindowSize: (size: string) => void;
-  setTotalCountries: (countries: CountriesType[]) => void;
-  setSelectedCountries: (countries: CountriesType[]) => void;
+  setTotalCountries: (countries: ResponseDataType[]) => void;
+  setSelectedCountries: (countries: ResponseDataType[]) => void;
   handleClickCard: (
-    countries: CountriesType[],
+    countries: ResponseDataType[],
     name: string,
     isSelected: boolean
   ) => void;
@@ -28,13 +20,13 @@ const useCountryStore = create<CountryState>((set) => ({
   totalCountries: [],
   selectedCountries: [],
   setWindowSize: (size: string) => set({ windowSize: size }),
-  setTotalCountries: (countries: CountriesType[]) =>
+  setTotalCountries: (countries: ResponseDataType[]) =>
     set({ totalCountries: countries }),
-  setSelectedCountries: (countries: CountriesType[]) =>
+  setSelectedCountries: (countries: ResponseDataType[]) =>
     set({ selectedCountries: countries }),
   handleClickCard: (countries, name, isSelected) => {
-    const updatedSelectedCountries: CountriesType[] = [];
-    const updatedCountries: CountriesType[] = [];
+    const updatedSelectedCountries: ResponseDataType[] = [];
+    const updatedCountries: ResponseDataType[] = [];
 
     countries.forEach((country) => {
       if (country.name.common === name) {
