@@ -1,10 +1,10 @@
 import "./App.css";
-import api from "./api/api";
 import Countries from "./components/Countries";
 import QueryProvider from "./query/queryClient";
 
 function App() {
-  api.country.getCountriesInfo();
+  // layout에 넣으면 좋은건가?
+
   return (
     <QueryProvider>
       <Countries />

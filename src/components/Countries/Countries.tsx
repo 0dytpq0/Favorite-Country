@@ -16,8 +16,10 @@ type ResponseDataType = {
 
 function Countries() {
   const { setTotalCountries } = useCountryStore();
-
-  const { data: countries = [] } = useQuery<ResponseDataType[], AxiosError>({
+  const { data: countries = [], isSuccess = false } = useQuery<
+    ResponseDataType[],
+    AxiosError
+  >({
     queryKey: ["countries"],
     queryFn: () => api.country.getCountriesInfo(),
     staleTime: 60 * 60 * 1000,
@@ -28,7 +30,7 @@ function Countries() {
   useEffect(() => {
     setTotalCountries(countries);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countries]);
+  }, [isSuccess]);
 
   return (
     <div>
